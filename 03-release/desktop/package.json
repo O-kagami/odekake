@@ -1,0 +1,27 @@
+{
+  "name": "odekake-desktop",
+  "version": "1.0.0",
+  "description": "おでかけノート 教材",
+  "author": "Course participant",
+  "main": "main.cjs",
+  "scripts": {
+    "start": "electron .",
+    "pack": "electron-builder --win portable"
+  },
+  "build": {
+    "appId": "example.odekake.note",
+    "productName": "OdekakeNote",
+    "files": [
+      "main.cjs"
+    ],
+    "win": {
+      "target": "portable"
+    },
+    "extraResources": [
+      {
+        "from": "../public",
+        "to": "public"
+      }
+    ]
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "manifest_version": 3,
+  "name": "おでかけノート",
+  "version": "1.0.0",
+  "description": "天気と持ち物を確認する授業用アプリ",
+  "action": {
+    "default_popup": "index.html"
+  }
+}

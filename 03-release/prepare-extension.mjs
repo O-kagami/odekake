@@ -1,0 +1,1 @@
+import fs from 'node:fs/promises';await fs.mkdir('extension',{recursive:true});await fs.cp('public','extension',{recursive:true});await fs.copyFile('extension-manifest.json','extension/manifest.json');await fs.appendFile('extension/style.css','\nbody{width:380px}');console.log('extension フォルダーをブラウザーで読み込みます。');
