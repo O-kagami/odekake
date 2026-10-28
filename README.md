@@ -34,10 +34,10 @@ node serve.mjs lab 4174
 簡易プレビューなので、最終確認はGitHubなど実際に使う画面で行います。
 
 ## フォルダー
-- 01-start：第1・2回で続けて編集するアプリとSPEC.md。
+- 01-start：全3回で続けて編集するアプリとSPEC.md。
 - 01-complete：第1回の復旧用。
 - 02-complete：気温・体感温度のAPI連携を読む完成例。自分の作品を上書きしない。
-- 03-release：公開DB、PWA、Windows、拡張機能の配布準備用。
+- 03-release：公開DB・デプロイ・配布の道具。publicは素材見本で、自分の作品は01-start/public。
 - docs：第1・2回のPages公開用。prepare-pages.mjsで同じ編集元から更新。
 - handouts/lesson-1.md〜lesson-3.md：スライドの順序に対応したコピー用テキスト。
 - teacher-guide.md：講師用の準備・時間配分・完成の判定。
@@ -114,16 +114,51 @@ Pagesはファイルを配り、利用者のブラウザーがOpen-Meteoへ直�
 
 公開画面が古いときは、docsのcommit、Actionsの結果、再読み込みの順で確認します。画面は開くがAPIが失敗する場合は、通信先、API応答、CORS、利用制限を確認します。
 
-## Cloudflareへ公開
-03-release内で順に実行します。
+## 第3回：同じodekakeにDBを追加し、公開・配布する
+
+前提は第2回のAPI連携が動き、自分のforkのPagesを更新済みであることです。**同じfork、同じclone先、同じ01-start/publicを使います。** 持ち物の追加、気温・体感温度、チェック保存、見た目の変更を残してください。
+
+### 事前準備
+Cloudflareのアカウントと利用条件を確認し、03-release内でnpm installを済ませます。配布先を1つ選び、Windowsならdesktopでnpm install --save-dev electron electron-builderを実行します。OSやネットワークの準備と大きなダウンロードは授業前に済ませます。OG画像の素材と、配布先の確認用端末も用意します。
+
+古い教材をfork済みでprepare-release.mjsやprepare-distribution.mjsがない場合は、[第3回への移行](UPGRADE-LESSON3.md)を先に実施してください。新しいforkの作成や完成例での上書きは不要です。
+
+### 同じ作品への追加
+1. git status、git remote -vを確認し、第2回の動く状態をcommitして残します。
+2. 教材ルートで次を実行。不足するPWA素材だけを追加し、既存のHTML・JS・CSSは維持します。
 
 ```sh
-npm install
+node prepare-release.mjs
+node serve.mjs 01-start
+```
+
+3. Codexへ下記を依頼し、01-start/SPEC.mdにも完成条件を追記します。
+
+```text
+01-start/publicを続けて編集します。第2回の気温・体感温度、
+自分の持ち物・見た目・localStorageのキーを維持してください。
+config.jsのlessonを3にして、既存のスポット取得処理を確認してください。
+03-release/worker.jsとschema.sqlの公開用読み取りAPIを使います。
+wrangler.jsoncのassets.directoryは../01-start/publicにします。
+index.htmlのheadへ次を追加し、manifestの名前を自分の作品に合わせます。
+<link rel="manifest" href="manifest.webmanifest">
+WebのapiBaseは空欄。local-sampleをDB接続成功として扱わないでください。
+前回の機能と、取得中・成功・失敗・再試行の表示を確認してください。
+```
+
+教材には非表示のスポット取得ひな形が入っています。今回はそれを読み、画面を有効化して、実際のクラウドDBへ接続します。03-release/publicの見本で自分の作品を丸ごと入れ替えません。
+
+### DBとデプロイ
+03-release/schema.sqlへ公開用スポットを1件追加します。idは未使用の値を使います。INSERT OR IGNOREは同じidの行を更新しないので、更新には明示的なUPDATEが必要です。ブラウザーから誰でも書き込めるAPIは作りません。
+
+03-release内で実行します。
+
+```sh
 npx wrangler login
 npx wrangler d1 create odekake-db
 ```
 
-表示されたdatabase_idをwrangler.jsoncの対応する欄へ設定します。DBを作成済みなら再作成せず、そのIDを確認します。
+作成済みなら再作成せず同じDBを使います。表示されたdatabase_idをwrangler.jsoncへ設定。bindingはDB、database_nameはodekake-db。assets.directoryは../01-start/publicです。
 
 ```sh
 npx wrangler d1 execute odekake-db --remote --file=schema.sql
@@ -131,40 +166,62 @@ npx wrangler d1 execute odekake-db --remote --command="SELECT * FROM places"
 npx wrangler deploy
 ```
 
-自分のアカウントにDBを作り、インターネットへ公開する操作です。アカウント・料金・利用制限を事前に確認してください。公開URLの/api/placesでsourceがd1となり、画面でもスポットを取得できることを確認します。
+Workersの新しいHTTPS URLをREADMEへ記録します。/api/placesのsourceがd1で、自分の追加スポットが出ること、画面から取得できること、気温・体感温度・持ち物も動くことを確認します。sourceがlocal-sampleならローカルサンプルであり、D1接続の確認にはなりません。
 
-## SEO・OG画像・PWA
-public/index.htmlのタイトルと説明を編集します。og:urlとog:imageを追加し、自分の公開URLを設定します。授業で作ったOG画像をpublic/og.pngへ保存し、再デプロイします。
+GitHubのリポジトリと作品は同じですが、公開URLはPagesからWorkersへ変わります。旧docsは第2回の版として残します。第3回ではprepare-pages.mjsを実行しません。新旧URL・Windows・拡張機能は保存領域が違い、以前のチェック状態は自動移行されません。
 
-PWA用の192px・512pxのアイコンは同梱しています。作品に合わせて変更できます。HTTPSの公開URLをスマホで開き、共有やメニューからホーム画面へ追加します。操作名・対応範囲はOSとブラウザーで異なります。
+### SEO・OG画像と再公開
+編集先は01-start/public/index.htmlです。既存のtitle、description、og:title、og:description、og:typeを自分の作品に合わせます。canonical、og:url、og:imageには新しいWorkers URLを設定し、同じタグを重複させません。01-start/public/og.pngへ制作した画像を保存します。教材の目安は1200×630px。実際の寸法と文字の読みやすさも確認します。
 
-## 公開API URL
-Web/PWAでは同じ公開先へ通信するため、public/config.jsのapiBaseは空欄で使えます。Windowsと拡張機能では、httpsで始まる自分の公開URLを設定してください。末尾にスラッシュは付けません。
-
-## Windows
-Windows PCを使います。03-release/desktop内で実行します。
+教材ルートで保存してから再公開します。
 
 ```sh
-npm install --save-dev electron electron-builder
-npm run start
+git status
+git diff
+git add 01-start/public 01-start/SPEC.md 03-release README.md prepare-release.mjs
+git diff --cached
+git commit -m "DB連携と公開・配布の準備を追加"
+git push
+cd 03-release
+npx wrangler deploy
 ```
 
-画面と通信を確認してから配布ファイルを生成します。
+git pushはGitHubへの保存です。この教材のWorkers公開はwrangler deployで行います。公開ページ、/api/places、/og.pngを開き、共有プレビューも確認します。検索の掲載時期・順位は完成条件にしません。共有先に古い画像が残る場合はキャッシュも確認します。
+
+### 配布：1つ選ぶ
+Windowsと拡張機能は**01-start/publicから配布用コピーを生成**します。WebのapiBaseを変えず、コピーへ公開URLを設定します。下記のhttps://example.comは自分のWorkersのホスト名へ置き換えてください。パス・クエリ・秘密情報は含めません。
+
+#### Windows
+03-release内で実行します。
 
 ```sh
+node prepare-distribution.mjs desktop https://example.com
+cd desktop
+npm run start
 npm run pack
 ```
 
-dist内のファイルを別のWindows PCで起動します。署名や端末ポリシーの警告は講師と確認し、保護機能を無効にして進めないでください。
+desktop/dist内の配布ファイルを別のWindows PCで起動します。天気・体感温度・DB・自分の持ち物を確認します。起動方法と通信先をREADMEへ記載。署名や端末ポリシーの警告は講師と確認し、保護機能を無効にして進めません。更新時は配布用コピーを再生成し、再ビルドします。
 
-## 拡張機能
-公開API URLの設定後、03-release内で実行します。
+#### モバイルPWA
+01-start/public/manifest.webmanifestの名前とアイコンを編集します。index.htmlのmanifestリンク、sw.js、192px・512pxアイコンを確認し、03-releaseでnpx wrangler deploy。スマホで**新しいWorkers URL**を開き、共有やメニューからホーム画面へ追加します。URLと追加手順を配布し、アイコンからの起動と前回の機能・DB取得を確認します。OS・ブラウザーによって操作や対応範囲が異なります。天気・DB取得には通信が必要です。PWA配布とネイティブアプリのストア掲載は別の工程です。
+
+#### 拡張機能
+03-release/extension-manifest.jsonの作品名を編集し、03-release内で実行します。
 
 ```sh
-node prepare-extension.mjs
+node prepare-distribution.mjs extension https://example.com
 ```
 
-Chromeの拡張機能管理画面 chrome://extensions でデベロッパーモードを有効にし、「パッケージ化されていない拡張機能を読み込む」でextensionフォルダーを選びます。自分の教材ソースであることを確認して操作してください。動作確認後、このフォルダーをZIPにし、解凍・読み込み手順を添えます。ストア公開には別途登録・審査等が必要です。
+dist/extensionへ同じアプリを生成します。host_permissionsはOpen-Meteoと指定した自分の公開ホストだけです。Chromeはchrome://extensions、Edgeはedge://extensionsを開き、開発者向け読み込みでこのdist/extensionを選びます。天気・体感温度・DB・持ち物を確認し、フォルダーをZIPにして解凍・読み込み手順を添えます。更新時は再生成し、管理画面で再読み込みします。授業内のZIP配布は開発者向けで、ストア掲載には登録や審査が必要です。
+
+### 第3回の完成条件
+- [ ] 同じfork・01-start/publicを使い、前回の機能と自分の変更が残っている
+- [ ] 新しい公開URLで/api/placesのsourceがd1となり、自分の追加スポットが出る
+- [ ] title・description・canonical・OG情報が新URLに合っている
+- [ ] 公開OG画像と共有時の表示を確認した
+- [ ] 選んだ配布先で相手が起動し、天気・体感温度・DBを取得できる
+- [ ] READMEへ新旧URL・導入手順・確認環境・未確認点を記録し、commit・pushした
 
 ## データと確認範囲
 チェックはブラウザーのlocalStorageに保存。天気取得時は選んだ地域の座標をOpen-Meteoへ送ります。公開DBは公開用スポット情報のみを読み取ります。認証機能はありません。CORSはアクセス認証ではありません。

@@ -1,62 +1,91 @@
-# 第3回：スライドに対応した操作・コピー用テキスト
+# 第3回：同じodekakeへDB・公開・配布を追加
 
-表紙は1ページ目です。下記は2ページ目から対応しています。実習の入力文をコピーして使えます。
+教材：https://github.com/O-kagami/odekake
+
+前提：第2回のAPI連携が動く自分のforkとclone先。編集元は01-start/publicです。
 
 ## 2ページ：今日のゴールと60分の流れ
 
+完成するもの：前回のodekakeにDBを加え、配布する
 
-
-完成するもの：公開URLと、選んだ形式の配布物
-
-0–5分　公開の全体像
-5–15分　サーバー・DBと設定
-15–30分　DB接続とデプロイ
-30–38分　SEOとOG画像
-38–55分　コース別の配布
+0–7分　同じfork・前回の作品から再開
+7–17分　画面・サーバー・DBと実装準備
+17–30分　DB登録とCloudflareへデプロイ
+30–40分　SEO・OG画像・再公開と履歴保存
+40–55分　Windows・PWA・拡張機能から1つ
 55–60分　相互確認と提出
 
-**完了の目安・確認：** 相手が自分の端末で使い始められれば、この回の完成
+完了の目安：天気・体感温度・自分の持ち物を残し、DBと配布を追加する
 
 ## 3ページ：公開前の準備
 
-事前準備　授業時間外
+第2回のfork・clone先・Pages URLを用意する。
+Cloudflareのアカウント・料金・制限を確認する。
+同じforkの03-releaseで npm install を済ませる。
+配布先を1つ選び、必要な端末と準備を済ませる。
+WindowsはdesktopでElectron関連を導入しておく。
 
-Cloudflareのアカウントを事前に準備する。
-料金と無料枠の制限を確認する。
-教材の03-releaseを開き、npm installを済ませる。
-WindowsコースはElectron関連の準備も済ませる。
-PWAコースは192pxと512pxのPNGアイコンを用意する。
+OG画像の素材と、試してもらう相手も準備する。
 
-公開する情報と、配布するファイルを確認する。
+完了の目安：準備・ダウンロード・ストア審査は60分に含めない。Plusとは別のサービス
 
-**完了の目安・確認：** サーバーやDBの料金はChatGPT Plusの料金に含まれない
+参考：https://developers.cloudflare.com/workers/platform/pricing/
+https://developers.cloudflare.com/d1/platform/pricing/
 
-参照先：
-- https://developers.cloudflare.com/workers/platform/pricing/
-- https://developers.cloudflare.com/d1/platform/pricing/
+## 4ページ：第2回の作品から再開
 
-## 4ページ：公開に使うサービス
+① 自分のforkと前回のPagesを開く。
+② clone済みの同じフォルダーを開く。
+③ git status と git remote -v を確認。
+④ node serve.mjs 01-start で起動。
+⑤ 天気・体感温度・持ち物を確認。
 
-全体像　0–5分
+前回の動く状態をcommitして残す。
+新しいアプリやforkは作らない。
 
-Cloudflare Workers
-Webページとサーバーの処理を公開。
+完了の目安：必要なこと：第2回のAPIが動き、前回の変更を説明できる
 
-Cloudflare D1
-公開用のおすすめ情報を保存。
+## 5ページ：編集元は3回とも同じ
 
-GitHub
-コードと変更履歴を保存。
-今回の公開操作はWranglerで行う。
 
-**完了の目安・確認：** 自分でサーバーOSを管理しない構成で、公開の流れを学ぶ
 
-参照先：
-- https://developers.cloudflare.com/workers/static-assets/
+### 01-start/public：自分の作品
 
-## 5ページ：画面・サーバー・DBの担当
+持ち物・表示・天気APIを保持。
+DBの表示・SEO・OG画像を追加。
+PWAの素材もここへ置く。
 
-基礎　5–15分
+名前に01があっても、
+第3回まで同じ場所を編集する。
+
+### 03-release：公開・配布の道具
+
+worker.js・schema.sql・公開設定。
+自分の作品を読み込んで公開。
+
+publicは素材見本。上書きに使わない。
+distは配布用に生成したコピー。
+GitHub Pagesのdocsは第2回の版。
+
+完了の目安：既存のforkに新しい補助ファイルがない場合は、READMEの移行手順を先に実施
+
+## 6ページ：同じアプリの公開先を広げる
+
+GitHubは同じforkを使う。
+
+第2回：GitHub Pages
+画面を配り、天気APIを呼ぶ。
+
+第3回：Cloudflare WorkersとD1
+同じ画面＋サーバー＋DBを公開。
+
+Workersの新しい公開URLを使う。
+
+完了の目安：旧Pagesは第2回の版。READMEへ新しい作品URLを記載する
+
+参考：https://developers.cloudflare.com/workers/static-assets/
+
+## 7ページ：画面・サーバー・DBの担当
 
 
 
@@ -84,11 +113,9 @@ JSONを返す。
 行ごとにスポットを保存。
 列はid、name、note。
 
-**完了の目安・確認：** Windowsや拡張機能からも、同じ公開APIを利用できる
+完了の目安：Windowsや拡張機能からも、同じ公開APIを利用できる
 
-## 6ページ：端末内の保存とDBの保存
-
-基礎　5–15分
+## 8ページ：端末内の保存とDBの保存
 
 
 
@@ -109,13 +136,28 @@ JSONを返す。
 
 個人別保存には認証・権限が必要。
 
-**完了の目安・確認：** すべてのアプリにDBが必要なわけではない
+完了の目安：公開先のURLが変わると保存領域も変わる。チェックは自動移行されない
 
-## 7ページ：SQLで表とデータを用意
+## 9ページ：同じ作品へDB連携を加える依頼
 
-基礎　5–15分
+教材にはDB取得のひな形がある。既存コードを読み、必要な差分を加える。
 
-schema.sqlには、公開してよいサンプル情報だけを入れる。
+```text
+01-start/publicを続けて編集します。前回の変更を残してください。
+気温・体感温度・持ち物の追加・チェック保存を維持してください。
+config.jsのlessonを3にし、既存のスポット取得処理を確認してください。
+03-releaseのworker.jsとschema.sqlを使い、公開用DBを読み取ります。
+wrangler.jsoncのassets.directoryは../01-start/publicにします。
+教材ルートでnode prepare-release.mjsを実行し、不足するPWA素材を追加。
+index.htmlへmanifestリンクを追加し、WebのapiBaseは空欄を維持。
+node serve.mjs 01-startで確認し、実際のDB接続確認は公開後に行います。
+```
+
+完了の目安：変更前にgit status・差分を確認し、前回の動く版をcommitして残す
+
+## 10ページ：SQLで表とデータを用意
+
+03-release/schema.sqlへ、公開用のスポットを1件追加する。
 
 ```text
 CREATE TABLE IF NOT EXISTS places (
@@ -124,50 +166,44 @@ CREATE TABLE IF NOT EXISTS places (
   note TEXT NOT NULL
 );
 INSERT OR IGNORE INTO places VALUES
-  (1, '公園', '散歩におすすめ');
+  (3, '広場', '待ち合わせに便利');
 ```
 
-**完了の目安・確認：** SQLはDBを操作する言語。SELECTで読み、INSERTで追加する
+完了の目安：idは重複させない。既存行の変更はINSERT OR IGNOREでは反映されない
 
-## 8ページ：D1データベースの作成
+## 11ページ：D1データベースの作成
 
-実習　15–30分
+03-release内で操作する。
 
-03-releaseのターミナルで操作。
+① npx wrangler login
+② 自分のアカウントを確認する。
+③ npx wrangler d1 create odekake-db
+④ database_idを控える。
 
-1. npx wrangler login
-2. 自分のアカウントへログイン。
-3. npx wrangler d1 create odekake-db
-4. 表示されたdatabase_idを控える。
+作成済みなら、そのDBを使う。
 
-授業用の新しいDBを作る。
+完了の目安：公開してよい授業用データだけを保存する
 
-**完了の目安・確認：** 既存の業務用DBや、個人情報の入ったDBは使わない
+参考：https://developers.cloudflare.com/d1/get-started/
 
-参照先：
-- https://developers.cloudflare.com/d1/get-started/
+## 12ページ：WorkerとDBの接続
 
-## 9ページ：WorkerとDBの接続
+03-release/wrangler.jsoncを確認。
 
-実習　15–30分
+binding：DB
+database_name：odekake-db
+database_id：作成時の値
 
-wrangler.jsoncのd1_databasesを編集。
+assets.directory：
+../01-start/public
 
-bindingはDB。
-database_nameはodekake-db。
-database_idは作成時の値。
+前回の画面をそのまま配信する。
 
-サーバーのコードはenv.DBから
-このDBを読み取る。
+完了の目安：03-release/publicは素材見本。作品全体を入れ替えない
 
-**完了の目安・確認：** キーの文字列ではなく、サービス内の接続設定を使う
+参考：https://developers.cloudflare.com/d1/get-started/
 
-参照先：
-- https://developers.cloudflare.com/d1/get-started/
-
-## 10ページ：公開DBへの登録と確認
-
-実習　15–30分
+## 13ページ：公開DBへの登録と確認
 
 1. schema.sqlを公開DBへ適用。
 2. SELECTで登録した行を確認。
@@ -178,16 +214,13 @@ database_idは作成時の値。
 
 どちらを操作するか確認する。
 
-**完了の目安・確認：** 実行するコマンドは次のスライドからコピーできる
+完了の目安：実行するコマンドは次のスライドからコピーできる
 
-参照先：
-- https://developers.cloudflare.com/d1/get-started/
+参考：https://developers.cloudflare.com/d1/get-started/
 
-## 11ページ：デプロイまでのコマンド
+## 14ページ：デプロイまでのコマンド
 
-実習　15–30分
-
-03-release内で実行する。先にdatabase_idと公開内容を確認する。
+03-release内で実行。database_idと公開するソースを先に確認する。
 
 ```text
 npx wrangler d1 execute odekake-db --remote --file=schema.sql
@@ -197,63 +230,40 @@ npx wrangler d1 execute odekake-db --remote --command="SELECT * FROM places"
 npx wrangler deploy
 ```
 
-**完了の目安・確認：** 完了後に表示されたhttpsの公開URLを、READMEへ記録する
+完了の目安：Wranglerが表示した新URLを記録。git pushだけではWorkersは更新されない
 
-参照先：
-- https://developers.cloudflare.com/d1/get-started/
-- https://developers.cloudflare.com/workers/wrangler/commands/
+参考：https://developers.cloudflare.com/d1/get-started/
+https://developers.cloudflare.com/workers/wrangler/commands/
 
-## 12ページ：公開したアプリの確認
+## 15ページ：公開したアプリの確認
 
-実習　15–30分
+① 新しい公開URLを開く。
+② /api/places のsourceがd1か確認。
+③ 自分が追加したスポットを読む。
+④ 気温・体感温度を取得する。
+⑤ 自分の持ち物と見た目も確認。
 
-1. 公開URLを別のタブで開く。
-2. /api/placesも開く。
-3. sourceがd1であることを確認。
-4. 画面でスポットを読み込む。
+右はローカルの確認例。
+公開DBの成功例ではない。
 
-右はローカルのサンプル画面。
-クラウド接続の成功例ではない。
+完了の目安：local-sampleとd1を区別。通信に失敗した場合の表示も確認する
 
-**完了の目安・確認：** ローカルの表示だけで、公開DBへの接続成功と判断しない
+## 16ページ：作品紹介ページのSEO
 
-## 13ページ：Codexへの公開準備の依頼
+同じ01-start/public/index.htmlを編集。
 
-実習の参照
+作品名と用途が伝わるtitle。
+自然な順序の見出しと短い説明。
+スマホで読みやすいレイアウト。
 
-授業用コードの公開設定を、自分の環境に合わせる。
+新しい公開URLを正規URLに設定。
+公開状態とnoindexの有無を確認。
 
-```text
-03-releaseをCloudflare WorkersとD1で公開します。
-wrangler.jsonc、worker.js、schema.sqlを確認してください。
-公開データだけを返す読み取り専用APIを維持してください。
-設定不足と公開する内容を説明してください。
-本番URLと/api/placesで確認する手順を提示してください。
-ローカルの確認と、実際の公開確認を分けて報告してください。
-```
+完了の目安：旧Pagesと新URLを区別。検索への掲載時期や順位は保証されない
 
-**完了の目安・確認：** 実際に公開する操作と対象アカウントを、自分で確認する
+参考：https://developers.google.com/search/docs/fundamentals/seo-starter-guide
 
-## 14ページ：作品紹介ページのSEO
-
-公開の整備　30–38分
-
-タイトルで内容を伝える。
-見出しを自然な順序にする。
-誰に役立つかを具体的に書く。
-スマホでも読みやすくする。
-
-公開ページが外から開けるか、
-不要なnoindexがないか確認する。
-
-**完了の目安・確認：** 設定直後の検索掲載や上位表示は、完成条件にしない
-
-参照先：
-- https://developers.google.com/search/docs/fundamentals/seo-starter-guide
-
-## 15ページ：OG画像と共有時の見え方
-
-公開の整備　30–38分
+## 17ページ：OG画像と共有時の見え方
 
 OGPは、共有時に使われる情報。
 
@@ -265,50 +275,61 @@ og:type　ページの種類
 
 画像も外部から取得できる必要がある。
 
-**完了の目安・確認：** SEOとOGPは目的が違う。両方を設定する
+完了の目安：SEOとOGPは目的が違う。両方を設定する
 
-参照先：
-- https://ogp.me/
+参考：https://ogp.me/
 
-## 16ページ：公開URLに合わせたメタ情報
+## 18ページ：公開URLに合わせたメタ情報
 
-実習　30–38分
-
-index.htmlのhead内へ設定。example.comは必ず自分の公開URLへ置き換える。
+01-start/public/index.htmlのheadへ。example.comを新しいWorkers URLへ変更。
 
 ```text
 <title>おでかけノート | 天気と持ち物</title>
 <meta name="description" content="外出前の準備を確認するアプリ">
+<link rel="canonical" href="https://example.com/">
 <meta property="og:title" content="おでかけノート">
 <meta property="og:type" content="website">
-<meta property="og:description" content="天気と持ち物を確認">
+<meta property="og:description" content="天気と持ち物、おすすめを確認">
 <meta property="og:url" content="https://example.com/">
 <meta property="og:image" content="https://example.com/og.png">
 ```
 
-**完了の目安・確認：** 画像を置き、再デプロイして、画像URLを直接開いて確認する
+完了の目安：既存タグは更新し、重複を避ける。画像も新しい公開先へ置く
 
-参照先：
-- https://ogp.me/
+参考：https://ogp.me/
 
-## 17ページ：共有画像の作り方
+## 19ページ：共有画像の作り方
 
-実習　30–38分
+自分の作品名と用途が伝わるOG画像をChatGPTで作る。
+教材の制作寸法は1200×630pxを目安にする。
+小さな文字を端へ置かず、作品名を読みやすくする。
+01-start/public/og.pngへ保存し、メタ情報を更新する。
 
-ChatGPTで、作品名と用途が伝わる画像を作る。
-教材では1200×630pxを目安に用意する。
-端に小さな文字を置かず、中央に作品名を配置する。
-og.pngとしてpublicへ保存し、メタ情報を更新する。
+再デプロイ後、画像URLと共有プレビューを確認する。
+共有先のキャッシュで古い画像が残る場合もある。
 
-共有サービス側のキャッシュで、古い画像が残る場合がある。
-
-**完了の目安・確認：** 画像サイズは共有先の仕様も確認する。実際の共有プレビューで点検
+完了の目安：画像の生成待ちに備え、素材は事前準備。作成後の実サイズも確認する
 
 補足：1200×630pxはこの教材での制作寸法。すべての共有先で完全に同じ表示を保証するものではない。
 
-## 18ページ：配布する形式を1つ選ぶ
+## 20ページ：同じforkに保存し、再公開する
 
-コース別実習　38–55分
+教材ルートで差分を確認し、ソースを保存。配布物はdistに生成する。
+
+```text
+git status
+git diff
+git add 01-start/public 01-start/SPEC.md 03-release README.md prepare-release.mjs
+git diff --cached
+git commit -m "DB連携と公開・配布の準備を追加"
+git push
+cd 03-release
+npx wrangler deploy
+```
+
+完了の目安：新URL・/api/places・/og.pngを確認。第3回ではprepare-pagesを実行しない
+
+## 21ページ：配布する形式を1つ選ぶ
 
 
 
@@ -336,47 +357,42 @@ manifestを確認。
 読み込みと動作確認。
 ZIPと導入手順を共有。
 
-**完了の目安・確認：** 選ばなかったコースは、授業後に参照できる
+完了の目安：選ばなかったコースは、授業後に参照できる
 
-## 19ページ：Windows：アプリの起動
+## 22ページ：Windows：アプリの起動
 
-Windowsコース　38–55分
+同じ01-start/publicを配布用にコピー。
+Webのconfig.jsは変更しない。
 
-1. public/config.jsのapiBaseに
-自分の公開URLを設定。
-2. desktopフォルダーへ移動。
-3. npm run startで起動確認。
+03-release内で次を実行する。
+node prepare-distribution.mjs
+  desktop https://自分の公開ホスト
+（上の2行は1行で入力）
 
-画面のNode.js権限は無効にし、
-必要な機能だけを持たせる。
+cd desktop
+npm run start
 
-**完了の目安・確認：** 事前準備：npm install --save-dev electron electron-builder
+完了の目安：配布用コピーだけに公開API URLを設定。天気・体感温度・DB・持ち物を確認
 
-参照先：
-- https://www.electronjs.org/docs/latest/tutorial/tutorial-packaging
+参考：https://www.electronjs.org/docs/latest/tutorial/tutorial-packaging
 
-## 20ページ：Windows：配布と確認
+## 23ページ：Windows：配布と確認
 
-Windowsコース　38–55分
+03-release/desktopで npm run pack を実行。
+desktop/dist内の配布ファイルを別のWindows PCで開く。
+前回の持ち物、気温・体感温度、DB取得を確認する。
+READMEへ起動方法・通信先・確認環境を記載する。
 
-desktop内で npm run pack を実行。
-dist内の配布ファイルを確認する。
-起動方法と、通信に使うサービスをREADMEへ記載。
-別のWindows PCへ渡して、起動と通信を確認。
+更新時は、同じ編集元から配布用コピーを作り直す。
+署名や端末ポリシーは講師と確認し、保護機能を維持する。
 
-署名や端末のポリシーによる警告は、事前に講師と確認する。
-保護機能を無効にして進めない。
+完了の目安：Windows版の生成・相手の端末での起動までを実習の完了条件にする
 
-**完了の目安・確認：** 自分の開発環境で起動しただけでは、配布確認は完了しない
+参考：https://www.electronjs.org/docs/latest/tutorial/code-signing
 
-参照先：
-- https://www.electronjs.org/docs/latest/tutorial/code-signing
+## 24ページ：PWA：名前とアイコン
 
-## 21ページ：PWA：名前とアイコン
-
-モバイルコース　38–55分
-
-manifest.webmanifestは、アプリ名・起動先・表示方法などを記述する。
+01-start/public/manifest.webmanifestを編集。名前を自分の作品に合わせる。
 
 ```text
 {
@@ -391,113 +407,103 @@ manifest.webmanifestは、アプリ名・起動先・表示方法などを記述
 }
 ```
 
-**完了の目安・確認：** 画像ファイルもpublicへ保存する。公開先はHTTPSを使う
+完了の目安：01-start/publicのアイコンとmanifestリンクを確認し、Workersへ再デプロイ
 
-参照先：
-- https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/Guides/Making_PWAs_installable
+参考：https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/Guides/Making_PWAs_installable
 
-## 22ページ：PWA：スマホで利用
+## 25ページ：PWA：スマホで利用
 
-モバイルコース　38–55分
-
-1. スマホで自分の公開URLを開く。
-2. ブラウザーの共有やメニューから
+① 新しいWorkers URLをスマホで開く。
+② 共有やメニューから
 ホーム画面への追加を選ぶ。
-3. 追加したアイコンから起動。
-4. 表示と天気取得を確認。
+③ アイコンから起動する。
+④ 天気・体感温度・DBを確認。
+⑤ 自分の持ち物と保存を確認。
 
 操作名はOS・ブラウザーで異なる。
 
-**完了の目安・確認：** ホーム画面への追加と、ストアへの掲載は別の手順
+完了の目安：URLと追加手順を配布する。PWAはストア審査を通すネイティブアプリとは別
 
-参照先：
-- https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/Guides/Installing
+参考：https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/Guides/Installing
 
-## 23ページ：拡張機能：manifest.json
+## 26ページ：拡張機能：manifest.json
 
-拡張機能コース　38–55分
-
-拡張機能は、画面のファイルに設定ファイルを加えて作る。
+生成するmanifestには、天気APIと自分の公開ホストだけを指定する。
 
 ```text
 {
   "manifest_version": 3,
   "name": "おでかけノート",
   "version": "1.0.0",
-  "action": { "default_popup": "index.html" }
+  "action": { "default_popup": "index.html" },
+  "host_permissions": [
+    "https://api.open-meteo.com/*",
+    "https://自分の公開ホスト/*"
+  ]
 }
 ```
 
-**完了の目安・確認：** 今回の機能に不要な、全サイトの閲覧権限などは付けない
+完了の目安：03-release/extension-manifest.jsonで名前を編集。URL権限は生成時に設定する
 
-参照先：
-- https://developer.chrome.com/docs/extensions/get-started/tutorial/hello-world
+参考：https://developer.chrome.com/docs/extensions/develop/concepts/network-requests
 
-## 24ページ：拡張機能：読み込み
+## 27ページ：拡張機能：読み込み
 
-拡張機能コース　38–55分
+03-release内で実行する。
+node prepare-distribution.mjs
+  extension https://自分の公開ホスト
+（上の2行は1行で入力）
 
-1. node prepare-extension.mjsを実行。
-2. 拡張機能の管理画面を開く。
-3. 自分の教材ソースを確認する。
-4. デベロッパーモードを有効にする。
-5. 「パッケージ化されていない
-拡張機能を読み込む」で
-extensionフォルダーを選ぶ。
+拡張機能の管理画面で
+デベロッパーモードを有効にする。
+「パッケージ化されていない
+拡張機能を読み込む」から
+dist/extensionを選ぶ。
 
-**完了の目安・確認：** 管理端末で制限がある場合は、講師へ相談する
+完了の目安：Chromeはchrome://extensions、Edgeはedge://extensionsを開く
 
-参照先：
-- https://developer.chrome.com/docs/extensions/get-started/tutorial/hello-world#load-unpacked
+参考：https://developer.chrome.com/docs/extensions/get-started/tutorial/hello-world#load-unpacked
 
-## 25ページ：拡張機能：配布と更新
+## 28ページ：拡張機能：配布と更新
 
-拡張機能コース　38–55分
+① ポップアップで前回の機能を確認。
+② DBのスポットも取得する。
+③ dist/extensionをZIPにする。
+④ 解凍・読み込み手順を添える。
+⑤ 別の環境で導入確認する。
 
-1. ポップアップを開いて動作確認。
-2. extensionフォルダーをZIPにする。
-3. 解凍・読み込み手順を添える。
-4. 別の環境で導入確認。
+更新時は同じ編集元から再生成し、
+拡張機能の再読み込みも行う。
 
-一般向けストア公開には、
-登録・掲載情報・審査が必要。
+完了の目安：授業内は開発者向けZIP配布。一般向けストア公開は発展課題
 
-**完了の目安・確認：** 授業内のZIP配布は、ストア公開の完了を意味しない
+参考：https://developer.chrome.com/docs/webstore/publish/
 
-参照先：
-- https://developer.chrome.com/docs/webstore/publish/
+## 29ページ：別の人に使ってもらう
 
-## 26ページ：別の人に使ってもらう
+READMEと配布物を渡し、相手が起動できるか確かめる。
+気温・体感温度・自分の持ち物・DB取得を試してもらう。
+新しい公開URLとOG画像のURLも開いてもらう。
+分かりにくかった点を1つ聞き、修正をcommitする。
 
-相互確認と提出　55–60分
+提出：同じfork、新しい公開URL、配布物または導入URL、
+確認画面、README、今回のcommit。
 
-説明せずに、READMEと配布物を渡す。
-相手が起動できるかを見る。
-主要な操作を1つ試してもらう。
-分かりにくかった場所を1つ聞く。
-必要な修正をcommitに残す。
+完了の目安：保存データは配布先ごとに別。確認済みの環境と未確認の環境を記載する
 
-提出：公開URL、配布物、画面写真、README。
+## 30ページ：公開後の更新と復旧
 
-**完了の目安・確認：** 「相手が使えたこと」と「まだ確認できていないこと」を分けて報告
+引き続き01-start/publicを編集する。
+Web/PWAは03-releaseで npx wrangler deploy。
+Windows・拡張機能は配布用コピーを再生成する。
+Windowsは再ビルド、拡張機能は再読み込み・再配布。
 
-## 27ページ：公開後の更新と復旧
-
-授業後の運用
-
-変更前の動く版を、commitと配布ファイルで残す。
-小さな変更を加えて、ローカルで確認する。
-デプロイまたは再パッケージ化する。
-公開先や別の端末でも確認する。
-
-不具合が出たら、変更点とエラーを確認して戻す。
+同じforkへcommit・pushし、READMEの更新日と版を記録。
 DBのデータ変更は、コードを戻すだけでは元に戻らない。
 
-**完了の目安・確認：** 公開は終点ではなく、使われ方を見て改善する開始点
+完了の目安：03-release/publicの見本やdistの生成物を、アプリの編集元にしない
 
-## 28ページ：公開トラブルの確認順
-
-困ったときの参照
+## 31ページ：公開トラブルの確認順
 
 画面が開かない：URL、公開状態、デプロイのエラー。
 DBが読めない：database_id、binding、表の作成先。
@@ -507,11 +513,9 @@ PWAが更新されない：Service Workerとキャッシュ。
 
 秘密の値を除いて、操作・期待・実際をCodexへ伝える。
 
-**完了の目安・確認：** 「動かない」を、どの段階で止まったかに分解する
+完了の目安：「動かない」を、どの段階で止まったかに分解する
 
-## 29ページ：次の一歩：ストア公開
-
-発展課題　授業後
+## 32ページ：次の一歩：ストア公開
 
 Windows：署名、インストーラー、必要ならMicrosoft Store。
 モバイル：ネイティブ版、開発者登録、実機確認、ストア審査。
@@ -520,8 +524,18 @@ Windows：署名、インストーラー、必要ならMicrosoft Store。
 必要な環境・料金・審査条件は、各ストアの最新情報で確認。
 今回の作品を土台に、別の公開支援回で進める。
 
-**完了の目安・確認：** 成果物：自分で説明でき、別の人が試せるアプリ
+完了の目安：成果物：自分で説明でき、別の人が試せるアプリ
 
-参照先：
-- https://developer.apple.com/programs/enroll/
-- https://developer.chrome.com/docs/webstore/publish/
+参考：https://developer.apple.com/programs/enroll/
+https://developer.chrome.com/docs/webstore/publish/
+
+## 配布コマンドのコピー用（03-release内）
+
+公開URLは自分のWorkers URLへ置き換えます。
+
+```sh
+node prepare-distribution.mjs desktop https://example.com
+node prepare-distribution.mjs extension https://example.com
+```
+
+選んだコースの1行だけ実行します。PWAにはこのコピー処理は不要です。

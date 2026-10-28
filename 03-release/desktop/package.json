@@ -19,7 +19,7 @@
     },
     "extraResources": [
       {
-        "from": "../public",
+        "from": "../dist/desktop/public",
         "to": "public"
       }
     ]

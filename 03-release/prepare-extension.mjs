@@ -1,1 +1,3 @@
-import fs from 'node:fs/promises';await fs.mkdir('extension',{recursive:true});await fs.cp('public','extension',{recursive:true});await fs.copyFile('extension-manifest.json','extension/manifest.json');await fs.appendFile('extension/style.css','\nbody{width:380px}');console.log('extension フォルダーをブラウザーで読み込みます。');
+// 旧教材のコマンド名も、同じ編集元を使う新しい配布処理へつなぎます。
+process.argv.splice(2, 0, 'extension');
+await import('./prepare-distribution.mjs');
