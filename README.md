@@ -34,11 +34,11 @@ node serve.mjs lab 4174
 簡易プレビューなので、最終確認はGitHubなど実際に使う画面で行います。
 
 ## フォルダー
-- 01-start：編集用ひな形とSPEC.md。
+- 01-start：第1・2回で続けて編集するアプリとSPEC.md。
 - 01-complete：第1回の復旧用。
-- 02-complete：天気API連携の復旧用。
+- 02-complete：気温・体感温度のAPI連携を読む完成例。自分の作品を上書きしない。
 - 03-release：公開DB、PWA、Windows、拡張機能の配布準備用。
-- docs：第1回のPages公開用。prepare-pages.mjsで生成。
+- docs：第1・2回のPages公開用。prepare-pages.mjsで同じ編集元から更新。
 - handouts/lesson-1.md〜lesson-3.md：スライドの順序に対応したコピー用テキスト。
 - teacher-guide.md：講師用の準備・時間配分・完成の判定。
 
@@ -73,6 +73,46 @@ git push
 01-start/publicを変更した後は、prepare-pages.mjsを再実行し、docsもcommit・pushします。最初から入っているdocsは開始時点のアプリです。自分の変更をコピーし忘れると、古い画面が公開されます。
 
 404はmain /docsとdocs/index.html、表示崩れはCSS/JSの相対パス、公開待ちはActionsの実行結果を確認します。
+
+## 第2回：同じforkと同じ公開URLを育てる
+
+新しいリポジトリやforkは作りません。第1回にcloneした自分のodekakeを開き、**01-start/publicを続けて編集**します。
+
+1. 自分のPages URLで前回の作品を確認し、git statusとgit remote -vで作業状態・originを確認します。別PCなら同じforkをcloneします。
+2. 未保存の変更を整理してから、01-start/SPEC.mdにAPIのURL、送受信データ、追加機能、完成条件を追記します。
+3. 01-start/publicには気温取得のひな形が入っています。config.jsのlessonを2へ変更し、Codexで体感温度も取得・表示する機能を追加します。
+4. currentパラメーターはtemperature_2m,apparent_temperature。気温・体感温度・単位・時刻・地域名・出典を表示します。取得中・失敗・再試行も確認します。
+5. node serve.mjs 01-startで起動し、前回の持ち物・表示の変更・チェック保存も維持できているか確認します。
+6. READMEの使い方とAPI情報を更新します。次を実行して、同じPagesサイトを更新します。
+
+```sh
+node prepare-pages.mjs
+git status
+git diff
+git add 01-start/public 01-start/SPEC.md README.md docs
+git diff --cached
+git commit -m "天気APIと体感温度を追加"
+git push
+```
+
+7. Pages設定は前回のmain /docsをそのまま使います。Actionsの公開処理が完了したら、**前回と同じURL**を開き直し、API通信と持ち物を確認します。
+8. 同じ公開URL・更新した画面・今回のcommit・APIで送受信する情報を提出します。
+
+### 完成条件
+- [ ] 前回の持ち物・自分の表示変更が残っている
+- [ ] 札幌と東京で気温・体感温度・単位・時刻が出る
+- [ ] 通信失敗後に再試行できる
+- [ ] docsを更新してpushした
+- [ ] 前回と同じPages URLで更新が見える
+
+Pagesはファイルを配り、利用者のブラウザーがOpen-Meteoへ直接問い合わせます。秘密キーは使いません。今回の無料APIは非商用の教材実習として利用し、利用制限・出典表示等は[公式条件](https://open-meteo.com/en/pricing)を確認します。
+
+### 復旧と更新の注意
+02-completeは差分を読むための完成例です。フォルダーを丸ごと上書きせず、自分の持ち物や見た目を残して必要箇所だけ反映してください。すでにforkした参加者は、この教材更新のために再forkする必要はありません。この手順は従来のprepare-pages.mjsでも使えます。
+
+ローカルの保存領域とPagesの保存領域は別です。localhostで付けたチェックがPagesへ自動で移るわけではありません。同じURLの公開版を更新したときも、localStorageのキーと持ち物名を維持します。
+
+公開画面が古いときは、docsのcommit、Actionsの結果、再読み込みの順で確認します。画面は開くがAPIが失敗する場合は、通信先、API応答、CORS、利用制限を確認します。
 
 ## Cloudflareへ公開
 03-release内で順に実行します。
