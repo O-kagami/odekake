@@ -269,7 +269,7 @@ https://github.com/O-kagami/odekake
 
 記号の後に半角スペースを入れる。
 
-完了の目安：作品名を、自分で考えた名前に変える
+完了の目安：練習室は別ターミナルで node serve.mjs lab 4174 を実行し、http://localhost:4174 を開く。作品名を自分で考えた名前へ変更する。
 
 参考：https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax
 
@@ -366,7 +366,7 @@ Codexで01-start/SPEC.mdを開き、次の項目を自分の言葉に変える�
 
 画面写真と、未対応の機能も添える。
 
-完了の目安：自分以外の人が、この文書だけで起動できるか
+完了の目安：実習としてREADMEへ作品名・使い方・完成条件を追記し、GitHubで表示を確認する。
 
 参考：https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-readmes
 
